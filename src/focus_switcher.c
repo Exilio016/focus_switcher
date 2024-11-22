@@ -18,6 +18,9 @@ typedef struct {
 } State;
 
 char *calculate_titles(HyprlandWindow *windows, char *titles){
+    if (titles != NULL) {
+        vector_header(titles)->length = 0;
+    }
     for(int i = 0; i < vector_length(windows); i++) {
         string_push_cstr(titles, windows[i].title);
         vector_push(titles, ';');
@@ -43,7 +46,6 @@ void handle_inputs(State *state) {
     if (0 != strcmp(state->search, state->old_search)){
         strcpy(state->old_search, state->search);
         search_window(state->windows, state->search);
-        vector_header(state->titles)->length = 0;
         state->titles = calculate_titles(state->windows, state->titles);
     }
 }
