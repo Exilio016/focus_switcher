@@ -19,4 +19,6 @@ HyprlandWindow *get_windows(Hyprland *hypr);
 
 void focus_window(Hyprland *hypr, HyprlandWindow *w);
 
+void search_window(HyprlandWindow *w, const char* search_text);
+
 #endif //HYPRLAND_H

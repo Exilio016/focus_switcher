@@ -1,5 +1,6 @@
 #include "bfutils_vector.h"
 #include "hyprland.h"
+#include "fuzzy.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -91,7 +92,6 @@ HyprlandWindow *get_windows(Hyprland *hypr){
     return list;
 }
 
-
 void focus_window(Hyprland *hypr, HyprlandWindow *w) {
     char command[256];
     reconnect(hypr);
@@ -103,4 +103,22 @@ void focus_window(Hyprland *hypr, HyprlandWindow *w) {
     char *res = read_from_socket(hypr->sock);
     close(hypr->sock);
     vector_free(res);
+}
+
+static const char *s;
+int windowcmp (const void *a, const void *b) {
+    HyprlandWindow *wa = (HyprlandWindow*) a;
+    HyprlandWindow *wb = (HyprlandWindow*) b;
+
+    int wa_dist = levenshtein_distance(wa->title, s);
+    int wb_dist = levenshtein_distance(wb->title, s);
+    printf("%s = %d\t%s = %d\n",wa->title, wa_dist, wb->title, wb_dist);
+    return wa_dist - wb_dist;
+}
+
+void search_window(HyprlandWindow *w, const char* search_text) {
+    if (search_text != NULL && strlen(search_text) > 0) {
+        s = search_text;
+        qsort(w, vector_length(w), sizeof(HyprlandWindow), windowcmp);
+    }
 }
