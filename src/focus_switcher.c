@@ -44,7 +44,6 @@ int main() {
     const int screenWidth = 800;
     const int screenHeight = 450;
 
-    InitWindow(screenWidth, screenHeight, "Focus Switcher");
     Hyprland hypr =  hyprland_init();
     HyprlandWindow *windows = get_windows(&hypr);
     char *titles = NULL;
@@ -55,6 +54,7 @@ int main() {
     titles[vector_length(titles) - 1] = '\0';
     State state = {.titles = titles, .listSize = vector_length(windows), .hypr = &hypr, .windows = windows };
 
+    InitWindow(screenWidth, screenHeight, "Focus Switcher");
     SetTargetFPS(60); 
     while (!state.exit) {
         HandleInputs(&state);
