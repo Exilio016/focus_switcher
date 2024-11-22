@@ -9,13 +9,13 @@ int levenshtein_distance(const char *a, const char *b) {
     vector_ensure_capacity(v0, strlen(b) + 1);
     vector_ensure_capacity(v1, strlen(b) + 1);
 
-    for (int i = 0; i < strlen(b); i++) {
+    for (int i = 0; i <= strlen(b); i++) {
         v0[i] = i;
     }
 
-    for (int i = 0; i < (strlen(a) - 1); i++) {
+    for (int i = 0; i < strlen(a); i++) {
         v1[0] = i + 1;
-        for (int j = 0; j < (strlen(b) - 1); j++) {
+        for (int j = 0; j < strlen(b) ; j++) {
             int deletionCost = v0[j+1] + 1;
             int insertionCost = v1[j] + 1;
             int substititutionCost = v0[j] + 1;

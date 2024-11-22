@@ -110,9 +110,8 @@ int windowcmp (const void *a, const void *b) {
     HyprlandWindow *wa = (HyprlandWindow*) a;
     HyprlandWindow *wb = (HyprlandWindow*) b;
 
-    int wa_dist = levenshtein_distance(wa->title, s);
-    int wb_dist = levenshtein_distance(wb->title, s);
-    printf("%s = %d\t%s = %d\n",wa->title, wa_dist, wb->title, wb_dist);
+    int wa_dist = levenshtein_distance(s, wa->title);
+    int wb_dist = levenshtein_distance(s, wb->title);
     return wa_dist - wb_dist;
 }
 
