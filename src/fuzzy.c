@@ -2,7 +2,8 @@
 #include "fuzzy.h"
 #include <string.h>
 #include <stdio.h>
-#include <sys/param.h>
+
+#define MIN(a, b) (((a) < (b)) ? (a) : (b))
 
 int levenshtein_distance(const char *a, const char *b) {
     int *v0 = NULL;
