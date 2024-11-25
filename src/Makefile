@@ -120,9 +120,6 @@ ifeq ($(PLATFORM),PLATFORM_DESKTOP)
         # FreeBSD, OpenBSD, NetBSD, DragonFly default compiler
         CC = clang
     endif
-    ifeq ($(PLATFORM_OS),WINDOWS)
-        CC = gcc-mingw-w64
-    endif
 endif
 ifeq ($(PLATFORM),PLATFORM_WEB)
     # HTML5 emscripten compiler
