@@ -1,5 +1,5 @@
 #include "bfutils_vector.h"
-#include "hyprland.h"
+#include "window_manager.h"
 #include "fuzzy.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -22,7 +22,7 @@ char *read_from_socket(int sock){
     return res;
 }
 
-void reconnect(Hyprland *hypr) {
+void reconnect(WindowManager *hypr) {
     struct sockaddr_un addr = {0};
     addr.sun_family = AF_UNIX;
     strcpy(addr.sun_path, hypr->sock_path);
@@ -39,18 +39,18 @@ void reconnect(Hyprland *hypr) {
     }
 }
 
-Hyprland hyprland_init() {
+WindowManager window_manager_init() {
     char *xdg_runtime_dir = getenv("XDG_RUNTIME_DIR"); 
     char *his = getenv("HYPRLAND_INSTANCE_SIGNATURE");
 
-    Hyprland hypr =  {0};
+    WindowManager hypr =  {0};
     snprintf(hypr.sock_path, 108, "%s/hypr/%s/.socket.sock", xdg_runtime_dir, his);
 
     return hypr;
 }
 
-HyprlandWindow *get_windows(Hyprland *hypr){
-    HyprlandWindow *list = NULL;
+WmWindow *get_windows(WindowManager *hypr){
+    WmWindow *list = NULL;
     reconnect(hypr);
 
     char *command = "/clients";
@@ -63,7 +63,7 @@ HyprlandWindow *get_windows(Hyprland *hypr){
     char *title_prefix =  "\ttitle: ";
     char *pid_prefix = "\tpid:";
     char *window_prefix = "Window ";
-    HyprlandWindow window = {0};
+    WmWindow window = {0};
     int need_to_push = 0;
 
     while (line != NULL) {
@@ -79,7 +79,7 @@ HyprlandWindow *get_windows(Hyprland *hypr){
         else if (0 == strncmp(line, window_prefix, strlen(window_prefix))) {
             if (need_to_push) {
                 vector_push(list, window);
-                window = (HyprlandWindow) {0};
+                window = (WmWindow) {0};
             }
             need_to_push = 1;
         }
@@ -92,7 +92,7 @@ HyprlandWindow *get_windows(Hyprland *hypr){
     return list;
 }
 
-void focus_window(Hyprland *hypr, HyprlandWindow *w) {
+void focus_window(WindowManager *hypr, WmWindow *w) {
     char command[256];
     reconnect(hypr);
 
@@ -105,19 +105,3 @@ void focus_window(Hyprland *hypr, HyprlandWindow *w) {
     vector_free(res);
 }
 
-static const char *s;
-int windowcmp (const void *a, const void *b) {
-    HyprlandWindow *wa = (HyprlandWindow*) a;
-    HyprlandWindow *wb = (HyprlandWindow*) b;
-
-    int wa_dist = levenshtein_distance(s, wa->title);
-    int wb_dist = levenshtein_distance(s, wb->title);
-    return wa_dist - wb_dist;
-}
-
-void search_window(HyprlandWindow *w, const char* search_text) {
-    if (search_text != NULL && strlen(search_text) > 0) {
-        s = search_text;
-        qsort(w, vector_length(w), sizeof(HyprlandWindow), windowcmp);
-    }
-}

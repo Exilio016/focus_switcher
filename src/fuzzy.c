@@ -1,4 +1,5 @@
 #include "bfutils_vector.h"
+#include "fuzzy.h"
 #include <string.h>
 #include <stdio.h>
 #include <sys/param.h>
@@ -35,3 +36,19 @@ int levenshtein_distance(const char *a, const char *b) {
     return res;
 }
 
+static const char *s;
+int windowcmp (const void *a, const void *b) {
+    WmWindow *wa = (WmWindow*) a;
+    WmWindow *wb = (WmWindow*) b;
+
+    int wa_dist = levenshtein_distance(s, wa->title);
+    int wb_dist = levenshtein_distance(s, wb->title);
+    return wa_dist - wb_dist;
+}
+
+void search_window(WmWindow *w, const char* search_text) {
+    if (search_text != NULL && strlen(search_text) > 0) {
+        s = search_text;
+        qsort(w, vector_length(w), sizeof(WmWindow), windowcmp);
+    }
+}

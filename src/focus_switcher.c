@@ -1,4 +1,5 @@
-#include "hyprland.h"
+#include "window_manager.h"
+#include "fuzzy.h"
 #include "raylib.h"
 #define RAYGUI_IMPLEMENTATION
 #include "raygui.h"
@@ -7,8 +8,8 @@
 #include <stdio.h>
 
 typedef struct {
-    Hyprland *hypr;
-    HyprlandWindow *windows;
+    WindowManager *hypr;
+    WmWindow *windows;
     char search[128];
     char old_search[128];
     char *titles;
@@ -17,7 +18,7 @@ typedef struct {
     int exit;
 } State;
 
-char *calculate_titles(HyprlandWindow *windows, char *titles){
+char *calculate_titles(WmWindow *windows, char *titles){
     if (titles != NULL) {
         vector_header(titles)->length = 0;
     }
@@ -66,8 +67,8 @@ int main() {
     const int screenWidth = 800;
     const int screenHeight = 450;
 
-    Hyprland hypr =  hyprland_init();
-    HyprlandWindow *windows = get_windows(&hypr);
+    WindowManager hypr =  window_manager_init();
+    WmWindow *windows = get_windows(&hypr);
     char *titles = calculate_titles(windows, NULL);
     State state = {.titles = titles, .listSize = vector_length(windows), .hypr = &hypr, .windows = windows };
 

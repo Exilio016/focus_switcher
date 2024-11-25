@@ -86,6 +86,8 @@
         pkgs.mkShell {
           buildInputs = with pkgs; [
             clang-tools
+            wine
+            pkgsCross.mingw32.buildPackages.gcc
             alsa-lib
             mesa
             libGL

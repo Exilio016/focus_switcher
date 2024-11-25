@@ -32,7 +32,12 @@ PLATFORM              ?= PLATFORM_DESKTOP
 PROJECT_NAME          ?= focus_switcher
 PROJECT_VERSION       ?= 1.0
 PROJECT_BUILD_PATH    ?= .
-PROJECT_SOURCE_FILES  ?= focus_switcher.c hyprland.c fuzzy.c
+
+ifeq ($(OS), Windows_NT)
+    PROJECT_SOURCE_FILES  ?= focus_switcher.c win32.c fuzzy.c
+else
+    PROJECT_SOURCE_FILES  ?= focus_switcher.c hyprland.c fuzzy.c
+endif
 
 RAYLIB_SRC_PATH       ?= C:\raylib\raylib\src
 RAYLIB_INCLUDE_PATH   ?= $(RAYLIB_SRC_PATH)
