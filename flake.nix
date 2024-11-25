@@ -44,11 +44,9 @@
             inherit version;
             src = ./src;
             buildInputs = with pkgs; [
-              clang-tools
               alsa-lib
               mesa
               libGL
-              bear
               xorg.libX11
               xorg.libXrandr
               xorg.libXi
@@ -86,8 +84,6 @@
         pkgs.mkShell {
           buildInputs = with pkgs; [
             clang-tools
-            wine
-            pkgsCross.mingw32.buildPackages.gcc
             alsa-lib
             mesa
             libGL
