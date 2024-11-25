@@ -120,6 +120,9 @@ ifeq ($(PLATFORM),PLATFORM_DESKTOP)
         # FreeBSD, OpenBSD, NetBSD, DragonFly default compiler
         CC = clang
     endif
+    ifeq ($(PLATFORM_OS),WINDOWS)
+        CC = gcc-mingw-w64
+    endif
 endif
 ifeq ($(PLATFORM),PLATFORM_WEB)
     # HTML5 emscripten compiler
@@ -139,12 +142,6 @@ endif
 # Define default make program: MAKE
 #------------------------------------------------------------------------------------------------
 MAKE ?= make
-
-ifeq ($(PLATFORM),PLATFORM_DESKTOP)
-    ifeq ($(PLATFORM_OS),WINDOWS)
-        MAKE = mingw32-make
-    endif
-endif
 
 # Define compiler flags: CFLAGS
 #------------------------------------------------------------------------------------------------
